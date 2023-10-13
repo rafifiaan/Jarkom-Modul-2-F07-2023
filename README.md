@@ -234,23 +234,23 @@ php -v
 ```
 - **Zip Download & Unzip Web Server Resources**
 ```
-wget -O '/var/www/abimanyu.a09.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
-unzip -o /var/www/abimanyu.a09.com -d /var/www/
-mv /var/www/abimanyu.yyy.com /var/www/abimanyu.a09
-rm /var/www/abimanyu.a09.com
+wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
+unzip -o /var/www/abimanyu.f07.com -d /var/www/
+mv /var/www/abimanyu.yyy.com /var/www/abimanyu.f07
+rm /var/www/abimanyu.f07.com
 rm -rf /var/www/abimanyu.yyy.com
 
-wget -O '/var/www/parikesit.abimanyu.a09.com' 'https://drive.usercontent.google.com/download?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
-unzip -o /var/www/parikesit.abimanyu.a09.com -d /var/www/
-mv /var/www/parikesit.abimanyu.yyy.com /var/www/parikesit.abimanyu.a09
-rm /var/www/parikesit.abimanyu.a09.com
+wget -O '/var/www/parikesit.abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
+unzip -o /var/www/parikesit.abimanyu.f07.com -d /var/www/
+mv /var/www/parikesit.abimanyu.yyy.com /var/www/parikesit.abimanyu.f07
+rm /var/www/parikesit.abimanyu.f07.com
 rm -rf /var/www/parikesit.abimanyu.yyy.com
-mkdir /var/www/parikesit.abimanyu.a09/secret
+mkdir /var/www/parikesit.abimanyu.f07/secret
 
-wget -O '/var/www/rjp.baratayuda.abimanyu.a09.com' 'https://drive.usercontent.google.com/download?id=1pPSP7yIR05JhSFG67RVzgkb-VcW9vQO6'
-unzip -o /var/www/rjp.baratayuda.abimanyu.a09.com -d /var/www/
-mv /var/www/rjp.baratayuda.abimanyu.yyy.com /var/www/rjp.baratayuda.abimanyu.a09
-rm /var/www/rjp.baratayuda.abimanyu.a09.com
+wget -O '/var/www/rjp.baratayuda.abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1pPSP7yIR05JhSFG67RVzgkb-VcW9vQO6'
+unzip -o /var/www/rjp.baratayuda.abimanyu.f07.com -d /var/www/
+mv /var/www/rjp.baratayuda.abimanyu.yyy.com /var/www/rjp.baratayuda.abimanyu.f07
+rm /var/www/rjp.baratayuda.abimanyu.f07.com
 rm -rf /var/www/rjp.baratayuda.abimanyu.yyy.com
 ```
 
