@@ -12,5 +12,8 @@ Pada Prabakusuma, Abimanyu, dan Wisanggeni, lakukan konfigurasi sebagai berikut
 ```
 code
 ```
+### result
 
 ## Soal 10
+### script
+### result
