@@ -711,41 +711,252 @@ Test Alias dari **www**
 ## Question 11 - *Web Server*
 > Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server **www.abimanyu.yyy.com**. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy
 
+Diperlukan beberapa konfigurasi setup jika belum melakukan setup pada `Node Abimanyu`, seperti
+```
+apt-get update
+apt-get install apache2 -y
+apt-get install libapache2-mod-php7.0 -y
+service apache2 start
+apt-get install wget -y
+apt-get install unzip -y
+apt-get install php -y
+```
+Kemudian juga menjalankan setup-setup berikut
+```
+wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
+unzip -o /var/www/abimanyu.f07.com -d /var/www/
+mv /var/www/abimanyu.yyy.com /var/www/abimanyu.f07
+rm /var/www/abimanyu.f07.com
+rm -rf /var/www/abimanyu.yyy.com
+```
+
 ### Script Solution
+- Node Abimanyu
+```
+cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/abimanyu.f07.com.conf
+
+rm /etc/apache2/sites-available/000-default.conf
+
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/abimanyu.f07
+
+  ServerName abimanyu.f07.com
+  ServerAlias www.abimanyu.f07.com
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/abimanyu.f07.com.conf
+
+a2ensite abimanyu.f07.com.conf
+
+service apache2 restart
+```
+
+Kemudian setelah itu, untuk menampilkan pada client yaitu menggunakan **lynx** yang di-install (Jangan lupa untuk menambahkan nameserver router pada saat penginstalan) 
+```
+apt-get install lynx -y
+```
+
+Setelah itu dapat langsung dijalankan dengan command berikut
+```
+lynx abimanyu.f07.com
+```
 
 ### Test Result
+![11](resources/doc-images/11.png)
 
 
 ## Question 12 - *Web Server*
 > Setelah itu ubahlah agar url **www.abimanyu.yyy.com/index.php/home** menjadi **www.abimanyu.yyy.com/home**.
 
+Untuk menyelesaikan permasalahan ini, diperlukan bantuan `Directory` sebagai tools untuk rewrite Indexes agar dapat melakukan Alias pada *domain*. Penerapan nya sebagai berikut
+```
+<Directory /var/www/abimanyu.f07/index.php/home>
+  Options +Indexes
+</Directory>
+
+Alias "/home" "/var/www/abimanyu.f07/index.php/home"
+```
+
 ### Script Solution
+- Node Abimanyu
+```
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/abimanyu.f07
+  ServerName abimanyu.f07.com
+  ServerAlias www.abimanyu.f07.com
+
+  <Directory /var/www/abimanyu.f07/index.php/home>
+          Options +Indexes
+  </Directory>
+
+  Alias "/home" "/var/www/abimanyu.f07/index.php/home"
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/abimanyu.f07.com.conf
+
+service apache2 restart
+```
+
+Setelah itu, lakukan testing dengan menjalankan command berikut pada *Node Client*
+```
+lynx abimanyu.f07.com/home
+```
 
 ### Test Result
+![12](resources/doc-images/12.png)
 
 
 ## Question 13 - *Web Server*
 > Selain itu, pada subdomain **www.parikesit.abimanyu.yyy.com**, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy
 
+Dalam menyelesaikan permasalahan tersebut, disini kita sebelumnya diperlukan beberapa konfigurasi setup seperti berikut 
+```
+wget -O '/var/www/parikesit.abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
+unzip -o /var/www/parikesit.abimanyu.f07.com -d /var/www/
+mv /var/www/parikesit.abimanyu.yyy.com /var/www/parikesit.abimanyu.f07
+rm /var/www/parikesit.abimanyu.f07.com
+rm -rf /var/www/parikesit.abimanyu.yyy.com
+mkdir /var/www/parikesit.abimanyu.f07/secret
+```
+
+Dan dilanjut dengan melakukan konfigurasi pada `ServerName` dan `ServerAlias`
 ### Script Solution
+```
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.f07
+  ServerName parikesit.abimanyu.f07.com
+  ServerAlias www.parikesit.abimanyu.f07.com
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
+
+a2ensite parikesit.abimanyu.f07.com.conf
+
+service apache2 restart
+```
+
+Setelah itu, testing dilakukan pada *Node Client* dengan menjalankan command berikut 
+```
+lynx parikesit.abimanyu.f07.com
+```
 
 ### Test Result
+![13](resources/doc-images/13.png)
 
 
 ## Question 14 - *Web Server*
 > Pada subdomain tersebut folder /public hanya dapat melakukan directory listing sedangkan pada folder /secret tidak dapat diakses *(403 Forbidden)*.
 
+Dalam menyelesaikan permasalahan tersebut cukup simple, prinsipnya jika kita mau mengizinkan **public** agar dapat melakukan *directory listing* kita menggunakan **Options +Indexes**. Sedangkan agar suatu folder tidak dapat di akses (*forbidden*), kita dapat menggunakan **Option -Indexes**.
+
 ### Script Solution
+- Node Abimanyu
+```
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.f07
+  ServerName parikesit.abimanyu.f07.com
+  ServerAlias www.parikesit.abimanyu.f07.com
+
+  <Directory /var/www/parikesit.abimanyu.f07/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.f07/secret>
+          Options -Indexes
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.f07/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.f07/secret"
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
+
+service apache2 restart
+```
+
+Setelah itu, untuk membuktikan nya cukup dengan memasukkan command berikut pada *Node Client*
+```
+lynx parikesit.abimanyu.f07.com/public
+lynx parikesit.abimanyu.f07.com/secret
+```
 
 ### Test Result
+Test **public**
+![pariPublic](resources/doc-images/14-1.png)
+
+Test **secret**
+![pariSecret](resources/doc-images/14-2.png)
+
+Laman **secret** setelah *alert*
+![nextPariSecret](resources/doc-images/14-3.png)
 
 
 ## Question 15 - *Web Server*
 > Buatlah kustomisasi halaman error pada folder /error untuk mengganti error kode pada Apache. Error kode yang perlu diganti adalah 404 Not Found dan 403 Forbidden
 
+Dalam membuat page *error html*, didapatkan dari file *resources* yang telah diberikan, untuk detailnya ada pada folder **parikesit.abimanyu.f07.com/public/error/.** Disana terdapat 2 file yaitu **403.html** dan **404.html**.</br>
+Untuk menyelesaikan-nya juga menggunakan **ErrorDocument** yang berfungsi melakukan *redirect* terhadap file yang diinginkan ketika mendapatkan masalah ketika mengakses *domain* yang telah ada sebelumnya. Sehingga penerapan konfigurasinya dengan menambahkan berikut 
+```
+ErrorDocument 404 /error/404.html
+ErrorDocument 403 /error/403.html
+```
+
 ### Script Solution
+- Node Abimanyu
+```
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.f07
+  ServerName parikesit.abimanyu.f07.com
+  ServerAlias www.parikesit.abimanyu.f07.com
+
+  <Directory /var/www/parikesit.abimanyu.f07/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.f07/secret>
+          Options -Indexes
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.f07/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.f07/secret"
+
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
+
+service apache2 restart
+```
+
+Setelah itu, untuk membuktikan **custom error** cukup dengan menjalankan command berikut pada *Node Client*
+```
+lynx parikesit.abimanyu.f07.com/testerror
+lynx parikesit.abimanyu.f07.com/secret
+```
 
 ### Test Result
+Test pada laman **404 Error**
+![error1](resources/doc-images/15-1.png)
+
+Laman **404 Error** setelah *alert*
+![nextError](resources/doc-images/15-2.png)
+
+Test pada laman **403 Forbidden**
+![forbidden1](resources/doc-images/15-3.png)
+
+Laman **403 Forbidden** setelah *alert*
+![nextSecret](resources/doc-images/15-4.png)
 
 
 ## Question 16 - *Web Server*
