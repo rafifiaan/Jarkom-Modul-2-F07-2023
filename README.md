@@ -1421,9 +1421,35 @@ Setelah mengisikan username `Wayang` dan password `baratayudaf07`, diperoleh has
 ## Question 19 - *Web Server*
 > Buatlah agar setiap kali mengakses IP dari Abimanyu akan secara otomatis dialihkan ke **www.abimanyu.yyy.com** (alias)
 
+Untuk mengakses **www.abimanyu.f07.com** dengan melalui IP Abimanyu, diperlukan sebuah `Redirect` ke **www.abimanyu.f07.com**. Kita dapat memasukkan konfigurasi ini ke dalam `000-default.conf` yang merupakan pengaturan *default* dari service Apache
 ### Script Solution
+Berikut konfigurasinya
+```sh
+echo -e '<VirtualHost *:80>
+    ServerAdmin webmaster@abimanyu.f07.com
+    DocumentRoot /var/www/html
 
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    Redirect / http://www.abimanyu.f07.com/
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
+apache2ctl configtest
+
+service apache2 restart
+
+# Test
+# lynx 10.55.3.3
+```
 ### Test Result
+Kita dapat menjalankan pengujian sebagai berikut pada node client Nakula
+
+![19 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/6c4a3f46-6ca1-4dfc-b3d0-045b96cd3e86)
+
+Diperoleh hasil sebagai berikut
+
+![19a testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/fe06d197-967c-4bd5-be2f-70bb3e77d43a)
 
 
 ## Question 20 - *Web Server*
