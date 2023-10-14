@@ -1455,6 +1455,79 @@ Diperoleh hasil sebagai berikut
 ## Question 20 - *Web Server*
 > Karena website **www.parikesit.abimanyu.yyy.com** semakin banyak pengunjung dan banyak gambar gambar random, maka ubahlah request gambar yang memiliki substring “abimanyu” akan diarahkan menuju abimanyu.png.
 
+Untuk menjawab soal ini, kita perlu mengatur pemetaan URL dengan bantuan `a2enmod rewrite`. 
 ### Script Solution
+Berikut konfigurasinya
+
+Pertama, kita perlu menjalankan perintah
+```sh
+a2enmod rewrite
+```
+
+Setelah itu, kita menjalankan pengaturan untuk ketentuan `Rewrite`-nya.
+```sh
+echo 'RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))
+RewriteCond %{REQUEST_URI} !/public/images/abimanyu.png
+RewriteRule abimanyu http://parikesit.abimanyu.f07.com/public/images/abimanyu.png$1 [L,R=301]' > /var/www/parikesit.abimanyu.f07/.htaccess
+```
+`RewriteEngine On`: Ini mengaktifkan mod_rewrite untuk server web. Tanpa baris ini, aturan pemetaan ulang URL tidak akan diterapkan.
+
+`RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))`: Ini adalah kondisi pertama yang memeriksa apakah URL memenuhi pola tertentu. Kondisi ini memeriksa apakah URL dimulai dengan /public/images/ diikuti oleh teks apa pun, kemudian abimanyu, kemudian teks lagi, dan diakhiri dengan .png atau .jpg.
+
+`RewriteCond %{REQUEST_URI} !/public/images/abimanyu.png`: Ini adalah kondisi kedua yang memeriksa apakah URL tidak mengarah ke /public/images/abimanyu.png. Ini dirancang untuk mencegah aturan rewrite diterapkan jika URL sudah mengarah ke gambar abimanyu.png.
+
+`RewriteRule abimanyu http://parikesit.abimanyu.f07.com/public/images/abimanyu.png$1 [L,R=301]`: Aturan pemetaan ulang ini digunakan ketika kedua kondisi di atas terpenuhi. Aturan ini akan mengarahkan URL yang memenuhi pola tersebut ke **http://parikesit.abimanyu.f07.com/public/images/abimanyu.png**, menambahkan apapun yang cocok dengan (.*) pada URL target.
+
+Setelah itu terdapat konfigurasi *virtual host* sebagai berikut
+```sh
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.f07
+
+  ServerName parikesit.abimanyu.f07.com
+  ServerAlias www.parikesit.abimanyu.f07.com
+
+  <Directory /var/www/parikesit.abimanyu.f07/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.f07/secret>
+          Options -Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.f07>
+          Options +FollowSymLinks -Multiviews
+          AllowOverride All
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.f07/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.f07/secret"
+  Alias "/js" "/var/www/parikesit.abimanyu.f07/public/js"
+
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
+```
+Terakhir, jalankan perintah berikut
+```sh
+a2enmod rewrite
+service apache2 restart
+```
 
 ### Test Result
+Untuk pengujian dapat dilakukan sebagai berikut
+
+![20 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/53244f71-deed-4bf7-a99c-9d6f6634dda4)
+
+Diperoleh hasil sebagai berikut
+
+![20a testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/90ff3dfb-9b05-4775-bc93-99d5442abf64)
+
+Jika dilakukan percobaan dengan tidak sesuai ketentuan, misalnya pada percobaan terakhir yaitu `lynx parikesit.abimanyu.f07.com/public/images/notabimanyujustmuseum.177013`, maka akan diperoleh hasil sebagai berikut
+
+![20b testresultnotvalid](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/cb7f5bce-0b5f-4959-a416-4423036d7342)
+
