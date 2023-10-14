@@ -191,18 +191,18 @@ Jaringan Komputer (F) </br>
 
 ## Install & Setup
 - **Router (Pandudewanata)**
-```
+```sh
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.55.0.0/16
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ```
 - **DNS Master & Slave (Yudhistira & Werkudara)**
-```
+```sh
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
 apt-get install bind9 -y      
 ```
 - **Client (Nakula & Sadewa)**
-```
+```sh
 echo '
 nameserver 10.55.1.4 # IP Yudhistira
 nameserver 10.55.1.5 # IP Werkudara
@@ -213,11 +213,11 @@ apt-get install dnsutils -y
 apt-get install lynx -y
 ```
 - **Web Server Nginx**
- ```
+ ```sh
 apt install nginx php php-fpm -y
 ```
 - **Web Server Apache2**
-```
+```sh
 apt-get update
 apt-get install dnsutils -y
 apt-get install lynx -y
@@ -233,7 +233,7 @@ echo -e "\n\nPHP Version:"
 php -v
 ```
 - **Zip Download & Unzip Web Server Resources**
-```
+```sh
 wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
 unzip -o /var/www/abimanyu.f07.com -d /var/www/
 mv /var/www/abimanyu.yyy.com /var/www/abimanyu.f07
@@ -262,7 +262,7 @@ Setelah membuat Topologi *Node* dan konfigurasi Node, langkah selanjutnya yaitu 
 
 ### Script Solution
 > Testing Node
-```
+```sh
 ping google.com -c 3
 ```
 
@@ -281,7 +281,7 @@ Dilakukan setup terlebih dahulu pada *Node* Yudhistira (DNS Master). Setelah itu
 
 ### Script Solution
 - Node Yudhistira
-```
+```sh
 echo 'zone "arjuna.f07.com" {
         type master;
         file "/etc/bind/praktikum-jarkom/arjuna.f07.com";
@@ -310,7 +310,7 @@ Setelah itu melakukan *setup* yaitu menghapus *namserver 192.168.122.1* atau *na
 nameserver 10.55.1.4
 ```
 Dan setelah itu dapat dibuktikan dengan melakukan **Ping** dan **CNAME** pada domain yang telah dibuat 
-```
+```sh
 ping arjuna.f07.com -c 3
 ping www.arjuna.f07.com -c 3
 host -t CNAME www.arjuna.f07.com
@@ -334,7 +334,7 @@ Langkah-langkah implementasi yang dilakukan sama seperti *Question 2*, perbedaan
 
 ### Script Solution
 - Node Yudhistira
-```
+```sh
 echo 'zone "abimanyu.f07.com" {
         type master;
         file "/etc/bind/praktikum-jarkom/abimanyu.f07.com";
@@ -358,7 +358,7 @@ service bind9 restart
 ```
 
 Setelah itu, dikarenakan *nameserver* masih menggunakan *IP Node Yudhistira* maka langkah selanjutnya yaitu langsung dibuktikan dengan melakukan **Ping** dan **CNAME** pada domain
-```
+```sh
 ping abimanyu.f07.com -c 3
 ping www.abimanyu.f07.com -c 3
 host -t CNAME www.abimanyu.f07.com
@@ -382,7 +382,7 @@ Dalam membuat *subdomain* pada domain *abimanyu.yyy.com*, perlu menambahkan bari
 
 ### Script Solution
 - Node Yudhistira
-```
+```sh
 echo "
 \$TTL    604800
 @       IN      SOA     abimanyu.f07.com. root.abimanyu.f07.com. (
@@ -401,7 +401,7 @@ parikesit       IN      A       10.55.3.3 ; IP Abimanyu
 service bind9 restart
 ```
 Setelah itu, langkah selanjutnya masih sama dengan *Question 2 / 3*, yaitu langsung dibuktikan melalui **Ping**
-```
+```sh
 ping parikesit.abimanyu.f07.com -c 3
 ```
 
@@ -417,14 +417,14 @@ Sebelum melakukan reverse domain, langkah pertama adalah perlu untuk mengetahui 
 ### Script Solution
 Setelah mengetahui IP dari *Node* Abimanyu, kita perlu mengedit file **/etc/bind/named.conf.local** dengan menambahkan 3 byte awal dari IP *Node* Abimanyu seperti berikut
 - Node Yudhistira
-```
+```sh
 echo 'zone "3.55.10.in-addr.arpa" { 
         type master;
         file "/etc/bind/praktikum-jarkom/3.55.10.in-addr.arpa";
 };' > /etc/bind/named.conf.local
 ```
 Dan dilanjut dengan meng-copy file **db.local** ke-dalam folder **praktikum-jarkom** dan merubah namanya menjadi **/etc/bind/jarkom/3.55.10.in-addr.arpa**. Setlah itu mengeditnya menjadi seperti berikut 
-```
+```sh
 echo "
 \$TTL    604800
 @       IN      SOA     abimanyu.f07.com. root.abimanyu.f07.com. (
@@ -441,14 +441,14 @@ echo "
 service bind9 restart
 ```
 Untuk mengecek apakah konfigurasi sudah benar atau belum, lakukan perintah berikut 
-```
+```sh
 apt-get update
 apt-get install dnsutils
 ```
 Pastikan nameserver di **/etc/resolv.conf** pada *Node Yudhistira* telah dikembalikan sama dengan nameserver dari **Pandudewanata** 
 
 Setelah itu, testing dapat dilakukan sama seperti pada *Question 2 / 3 / 4* yaitu pada *Node Client* dengan memasukkan command berikut
-```
+```sh
 host -t PTR 10.55.3.3
 ```
 
@@ -464,7 +464,7 @@ Dalam membuat DNS Slave, kita memerlukan beberapa konfigurasi pada `DNS Master` 
 ### Script Solution
 Langkah awal adalah menambahkan *nofity, also-notify dan allow-transfer* agar memberikan izin kepada *IP* yang dituju
 - Node Yudhistira
-```
+```sh
 echo 'zone "arjuna.f07.com" {
         type master;
         notify yes;
@@ -493,7 +493,7 @@ service bind9 stop // Stop untuk testing Slave
 - Node Werkudara (Slave)
 
 Membuat **type slave** pada zone dari *domain* dan mengubah *path file*
-```
+```sh
 echo 'zone "arjuna.f07.com" {
         type slave;
         masters { 10.55.1.4; }; // IP Yudhistira
@@ -515,7 +515,7 @@ nameserver 10.55.1.5
 ```
 
 Jika sudah, testing dapat dilakukan dengan melakukan **Ping** pada domain yang telah dibuat seperti `Arjuna` dan `Abimanyu`
-```
+```sh
 ping arjuna.f07.com -c 3
 ping abimanyu.f07.com -c 3
 ```
@@ -542,7 +542,7 @@ Dalam membuat Delegasi subdomain, diperlukan beberapa configurasi pada `DNS Mast
 ### Script Solution
 Perlu menambahkan ``ns1     IN      A       10.55.1.5     ; IP Werkudara`` agar mendapatkan authoritative terhadap Werkudara. Kita juga perlu mengaktifkan ``allow-query { any; };`` pada `DNS Master`. Dan juga perlu untuk mengedit **/etc/bind/named.conf.local** 
 - Node Yudhistira
-```
+```sh
 echo '
 $TTL    604800
 @       IN      SOA     abimanyu.f07.com. root.abimanyu.f07.com. (
@@ -587,7 +587,7 @@ service bind9 restart
 - Node Werkudara
 
 Dan juga perlu setup juga pada *Node Werkudara* untuk mengarahkan `zone` ke `DNS Master` agar authoritative tadi dapat jalan. Kita juga perlu mengaktifkan ``allow-query { any; };`` pada `DNS Slave`
-```
+```sh
 echo '
 options {
         directory "var/cache/bind";
@@ -624,7 +624,7 @@ service bind9 restart
 ```
 
 Setelah semua berhasil di-setup, untuk melakukan testing cukup melakukan **Ping** pada `baratayuda.abimanyu.f07.com` atau `www.baratayuda.abimanyu.f07.com` dan juga Alias dapat dilihat dengan menjalankan **CNAME**
-```
+```sh
 ping baratayuda.abimanyu.f07.com -c 3
 ping www.baratayuda.abimanyu.f07.com -c 3
 host -t CNAME www.baratayuda.abimanyu.f07.com 
@@ -654,7 +654,7 @@ www.rjp         IN      CNAME   rjp.baratayuda.abimanyu.f07.com.
 ```
 
 - Node Werkudara
-```
+```sh
 echo '
 $TTL    604800
 @       IN      SOA     baratayuda.abimanyu.f07.com. root.baratayuda.abimanyu.f07.com. (
@@ -675,7 +675,7 @@ service bind9 restart
 ```
 
 Setelah berhasil ditambahkan dan restart bind9, untuk melakukan testing cukup dengan melakukan **Ping** pada `rjp.baratayuda.abimanyu.f07.com` atau `www.rjp.baratayuda.abimanyu.f07.com` dan juga Alias dapat dilihat dengan menjalankan **CNAME**
-```
+```sh
 ping rjp.baratayuda.abimanyu.f07.com -c 3
 ping www.rjp.baratayuda.abimanyu.f07.com -c 3
 host -t CNAME www.rjp.baratayuda.abimanyu.f07.com
@@ -1007,7 +1007,7 @@ Hasil menampilkan Wisanggeni
 > Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server **www.abimanyu.yyy.com**. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy
 
 Diperlukan beberapa konfigurasi setup jika belum melakukan setup pada `Node Abimanyu`, seperti
-```
+```sh
 apt-get update
 apt-get install apache2 -y
 apt-get install libapache2-mod-php7.0 -y
@@ -1017,7 +1017,7 @@ apt-get install unzip -y
 apt-get install php -y
 ```
 Kemudian juga menjalankan setup-setup berikut
-```
+```sh
 wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
 unzip -o /var/www/abimanyu.f07.com -d /var/www/
 mv /var/www/abimanyu.yyy.com /var/www/abimanyu.f07
@@ -1027,7 +1027,7 @@ rm -rf /var/www/abimanyu.yyy.com
 
 ### Script Solution
 - Node Abimanyu
-```
+```sh
 cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/abimanyu.f07.com.conf
 
 rm /etc/apache2/sites-available/000-default.conf
@@ -1049,12 +1049,12 @@ service apache2 restart
 ```
 
 Kemudian setelah itu, untuk menampilkan pada client yaitu menggunakan **lynx** yang di-install (Jangan lupa untuk menambahkan nameserver router pada saat penginstalan) 
-```
+```sh
 apt-get install lynx -y
 ```
 
 Setelah itu dapat langsung dijalankan dengan command berikut
-```
+```sh
 lynx abimanyu.f07.com
 ```
 
@@ -1076,7 +1076,7 @@ Alias "/home" "/var/www/abimanyu.f07/index.php/home"
 
 ### Script Solution
 - Node Abimanyu
-```
+```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www/abimanyu.f07
@@ -1097,7 +1097,7 @@ service apache2 restart
 ```
 
 Setelah itu, lakukan testing dengan menjalankan command berikut pada *Node Client*
-```
+```sh
 lynx abimanyu.f07.com/home
 ```
 
@@ -1109,7 +1109,7 @@ lynx abimanyu.f07.com/home
 > Selain itu, pada subdomain **www.parikesit.abimanyu.yyy.com**, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy
 
 Dalam menyelesaikan permasalahan tersebut, disini kita sebelumnya diperlukan beberapa konfigurasi setup seperti berikut 
-```
+```sh
 wget -O '/var/www/parikesit.abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
 unzip -o /var/www/parikesit.abimanyu.f07.com -d /var/www/
 mv /var/www/parikesit.abimanyu.yyy.com /var/www/parikesit.abimanyu.f07
@@ -1120,7 +1120,7 @@ mkdir /var/www/parikesit.abimanyu.f07/secret
 
 Dan dilanjut dengan melakukan konfigurasi pada `ServerName` dan `ServerAlias`
 ### Script Solution
-```
+```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www/parikesit.abimanyu.f07
@@ -1137,7 +1137,7 @@ service apache2 restart
 ```
 
 Setelah itu, testing dilakukan pada *Node Client* dengan menjalankan command berikut 
-```
+```sh
 lynx parikesit.abimanyu.f07.com
 ```
 
@@ -1152,7 +1152,7 @@ Dalam menyelesaikan permasalahan tersebut cukup simple, prinsipnya jika kita mau
 
 ### Script Solution
 - Node Abimanyu
-```
+```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www/parikesit.abimanyu.f07
@@ -1178,7 +1178,7 @@ service apache2 restart
 ```
 
 Setelah itu, untuk membuktikan nya cukup dengan memasukkan command berikut pada *Node Client*
-```
+```sh
 lynx parikesit.abimanyu.f07.com/public
 lynx parikesit.abimanyu.f07.com/secret
 ```
@@ -1206,7 +1206,7 @@ ErrorDocument 403 /error/403.html
 
 ### Script Solution
 - Node Abimanyu
-```
+```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
   DocumentRoot /var/www/parikesit.abimanyu.f07
@@ -1235,7 +1235,7 @@ service apache2 restart
 ```
 
 Setelah itu, untuk membuktikan **custom error** cukup dengan menjalankan command berikut pada *Node Client*
-```
+```sh
 lynx parikesit.abimanyu.f07.com/testerror
 lynx parikesit.abimanyu.f07.com/secret
 ```
