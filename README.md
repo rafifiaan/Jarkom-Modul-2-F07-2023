@@ -692,6 +692,7 @@ www.rjp         IN      CNAME   rjp.baratayuda.abimanyu.f07.com.
 ```
 
 - Node Werkudara
+
 ```sh
 echo '
 $TTL    604800
@@ -713,6 +714,7 @@ service bind9 restart
 ```
 
 Setelah berhasil ditambahkan dan restart bind9, untuk melakukan testing cukup dengan melakukan **Ping** pada `rjp.baratayuda.abimanyu.f07.com` atau `www.rjp.baratayuda.abimanyu.f07.com` dan juga Alias dapat dilihat dengan menjalankan **CNAME**
+
 ```sh
 ping rjp.baratayuda.abimanyu.f07.com -c 3
 ping www.rjp.baratayuda.abimanyu.f07.com -c 3
@@ -721,12 +723,15 @@ host -t CNAME www.rjp.baratayuda.abimanyu.f07.com
 
 ### Test Result
 Test tanpa **www**
+
 ![rjpbaratayuda](resources/doc-images/8-1.png)
 
 Test menggunakan **www**
+
 ![rjpbaratayudaWWW](resources/doc-images/8-2.png)
 
 Test Alias dari **www**
+
 ![cnamerjpBarata](resources/doc-images/8-3.png)
 
 
@@ -736,6 +741,7 @@ Test Alias dari **www**
 Untuk melakukan load balancer, kita dapat melakukan konfigurasi pada node Arjuna sebagai load balancer, node : Prabakusuma, Abimanyu, dan Wisanggeni sebagai workernya. Konfigurasi ini dapat dijadikan ke dalam satu script bash, namun dibedakan untuk setiap fungsinya
 ### Script Solution
 Pada node Arjuna, dapat melakukan konfigurasi berikut (Beberapa perintah sudah sempat disinggung sebelumnya pada bagian Preparation, namun ditulis kembali).
+
 ```sh
 echo -e '
 nameserver 192.168.122.1
@@ -751,6 +757,7 @@ apt-get install lynx -y
 ```
 
 Setelah itu, untuk load balancer pada node Arjuna, dapat dilakukan melalui konfigurasi berikut
+
 ```sh
 echo '
  upstream myweb  {
@@ -772,7 +779,9 @@ echo '
  ln -s /etc/nginx/sites-available/lb-arjuna.f07 /etc/nginx/sites-enabled
  service nginx restart
 ```
+
 Untuk worker, pada node Prabakusuma, dapat melakukan konfigurasi berikut
+
 ```sh
 echo -e '
 nameserver 192.168.122.1
@@ -828,6 +837,7 @@ service nginx restart
 ```
 
 Untuk worker, pada node Abimanyu, dapat melakukan konfigurasi berikut
+
 ```sh
 echo -e '
 nameserver 192.168.122.1
@@ -883,6 +893,7 @@ service nginx restart
 ```
 
 Untuk worker, pada node Wisanggeni, dapat melakukan konfigurasi berikut
+
 ```sh
 echo -e '
 nameserver 192.168.122.1
@@ -936,19 +947,24 @@ service php7.0-fpm start
 rm /etc/nginx/sites-enabled/default
 service nginx restart
 ```
+
 ### Test Result
 Lakukan pengujian pada node client seperti Nakula. Tuliskan perintah berikut
+
 ![9 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/81ce7cfb-262d-402a-b765-8c49f8e6b3ef)
 
 Maka akan diperoleh hasil sebagai berikut. Hasil ini dapat berubah-ubah jika perintah pengujian di atas dijalankan kembali
 
 Hasil menampilkan Prabakusuma
+
 ![9a testpra](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/5aa958d4-9668-4076-8b52-4a62c2bf8f7b)
 
 Hasil menampilkan Abimanyu
+
 ![9b testabi](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/636e51ff-274a-404b-91dc-4af362aa73a3)
 
 Hasil menampilkan Wisanggeni
+
 ![9c testwis](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/944690fc-f96a-499d-b6bd-81c6c177270b)
 
 
@@ -956,8 +972,10 @@ Hasil menampilkan Wisanggeni
 > Kemudian gunakan algoritma **Round Robin** untuk Load Balancer pada **Arjuna**. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh **Prabakusuma:8001**, **Abimanyu:8002**, **Wisanggeni:8003** 
 
 Setelah sebelumnya berhasil melakukan deployment pada setiap worker, untuk menerapkan **Round Robin** dan setiap worker ditentukan port-nya. Kita hanya perlu mengubah beberapa konfigurasi pada load balancer Arjuna, dan ketiga workernya.
+
 ### Script Solution
 Untuk load balancer Arjuna, dapat mengubah konfigurasinya menjadi seperti berikut ini. Disini ditambahkan `:800N` pada setiap baris server worker-nya, dengan N merupakan angka 1 hingga 3 untuk membedakan port pada setiap workernya.
+
 ```sh
 echo '
  upstream myweb  {
@@ -980,6 +998,7 @@ service nginx restart
 ```
 
 Adapun untuk worker-nya, terdapat tambahan keterangan terkait port yang digunakan. Pada konfigurasi ini, dapat dilihat pada baris `listen 800N`, dimana N merupakan angka menyesuaikan dengan masing-masing port worker. Disini juga ditambahkan satu perintah `echo` (echo yang ketiga) yang menampilkan pesan tambahan terkait port yang digunakan oleh setiap worker.
+
 ```sh
 echo '
  <?php
@@ -1027,17 +1046,22 @@ service php7.0-fpm start
 rm /etc/nginx/sites-enabled/default
 service nginx restart
 ```
+
 ### Test Result
 Lakukan pengujian pada node client seperti Nakula. Tuliskan perintah berikut
+
 ![9 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/81ce7cfb-262d-402a-b765-8c49f8e6b3ef)
 
 Hasil menampilkan Prabakusuma
+
 ![10a testpra](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/4891f93e-f475-4aef-ab70-d1739397a578)
 
 Hasil menampilkan Abimanyu
+
 ![10b testabi](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/6321a60a-dabc-4bff-ab71-14a87de0a982)
 
 Hasil menampilkan Wisanggeni
+
 ![10c testwis](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/faf59cb5-74c8-410c-856a-f95ee681928a)
 
 
@@ -1045,6 +1069,7 @@ Hasil menampilkan Wisanggeni
 > Selain menggunakan Nginx, lakukan konfigurasi Apache Web Server pada worker Abimanyu dengan web server **www.abimanyu.yyy.com**. Pertama dibutuhkan web server dengan DocumentRoot pada /var/www/abimanyu.yyy
 
 Diperlukan beberapa konfigurasi setup jika belum melakukan setup pada `Node Abimanyu`, seperti
+
 ```sh
 apt-get update
 apt-get install apache2 -y
@@ -1054,7 +1079,9 @@ apt-get install wget -y
 apt-get install unzip -y
 apt-get install php -y
 ```
+
 Kemudian juga menjalankan setup-setup berikut
+
 ```sh
 wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
 unzip -o /var/www/abimanyu.f07.com -d /var/www/
@@ -1065,6 +1092,7 @@ rm -rf /var/www/abimanyu.yyy.com
 
 ### Script Solution
 - Node Abimanyu
+
 ```sh
 cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/abimanyu.f07.com.conf
 
@@ -1087,16 +1115,19 @@ service apache2 restart
 ```
 
 Kemudian setelah itu, untuk menampilkan pada client yaitu menggunakan **lynx** yang di-install (Jangan lupa untuk menambahkan nameserver router pada saat penginstalan) 
+
 ```sh
 apt-get install lynx -y
 ```
 
 Setelah itu dapat langsung dijalankan dengan command berikut
+
 ```sh
 lynx abimanyu.f07.com
 ```
 
 ### Test Result
+
 ![11](resources/doc-images/11.png)
 
 
@@ -1104,6 +1135,7 @@ lynx abimanyu.f07.com
 > Setelah itu ubahlah agar url **www.abimanyu.yyy.com/index.php/home** menjadi **www.abimanyu.yyy.com/home**.
 
 Untuk menyelesaikan permasalahan ini, diperlukan bantuan `Directory` sebagai tools untuk rewrite Indexes agar dapat melakukan Alias pada *domain*. Penerapan nya sebagai berikut
+
 ```
 <Directory /var/www/abimanyu.f07/index.php/home>
   Options +Indexes
@@ -1114,6 +1146,7 @@ Alias "/home" "/var/www/abimanyu.f07/index.php/home"
 
 ### Script Solution
 - Node Abimanyu
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1135,11 +1168,13 @@ service apache2 restart
 ```
 
 Setelah itu, lakukan testing dengan menjalankan command berikut pada *Node Client*
+
 ```sh
 lynx abimanyu.f07.com/home
 ```
 
 ### Test Result
+
 ![12](resources/doc-images/12.png)
 
 
@@ -1147,6 +1182,7 @@ lynx abimanyu.f07.com/home
 > Selain itu, pada subdomain **www.parikesit.abimanyu.yyy.com**, DocumentRoot disimpan pada /var/www/parikesit.abimanyu.yyy
 
 Dalam menyelesaikan permasalahan tersebut, disini kita sebelumnya diperlukan beberapa konfigurasi setup seperti berikut 
+
 ```sh
 wget -O '/var/www/parikesit.abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1LdbYntiYVF_NVNgJis1GLCLPEGyIOreS'
 unzip -o /var/www/parikesit.abimanyu.f07.com -d /var/www/
@@ -1158,6 +1194,7 @@ mkdir /var/www/parikesit.abimanyu.f07/secret
 
 Dan dilanjut dengan melakukan konfigurasi pada `ServerName` dan `ServerAlias`
 ### Script Solution
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1175,11 +1212,13 @@ service apache2 restart
 ```
 
 Setelah itu, testing dilakukan pada *Node Client* dengan menjalankan command berikut 
+
 ```sh
 lynx parikesit.abimanyu.f07.com
 ```
 
 ### Test Result
+
 ![13](resources/doc-images/13.png)
 
 
@@ -1190,6 +1229,7 @@ Dalam menyelesaikan permasalahan tersebut cukup simple, prinsipnya jika kita mau
 
 ### Script Solution
 - Node Abimanyu
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1216,6 +1256,7 @@ service apache2 restart
 ```
 
 Setelah itu, untuk membuktikan nya cukup dengan memasukkan command berikut pada *Node Client*
+
 ```sh
 lynx parikesit.abimanyu.f07.com/public
 lynx parikesit.abimanyu.f07.com/secret
@@ -1223,12 +1264,15 @@ lynx parikesit.abimanyu.f07.com/secret
 
 ### Test Result
 Test **public**
+
 ![pariPublic](resources/doc-images/14-1.png)
 
 Test **secret**
+
 ![pariSecret](resources/doc-images/14-2.png)
 
 Laman **secret** setelah *alert*
+
 ![nextPariSecret](resources/doc-images/14-3.png)
 
 
