@@ -318,12 +318,15 @@ host -t CNAME www.arjuna.f07.com
 
 ### Test Result
 Test tanpa **www**
+
 ![domArjuna](resources/doc-images/2-1.png)
 
 Test menggunakan **www**
+
 ![domWwwArjuna](resources/doc-images/2-2.png)
 
 Test Alias dari **www**
+
 ![cnameArjuna](resources/doc-images/2-3.png)
 
 
