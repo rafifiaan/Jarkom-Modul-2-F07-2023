@@ -47,5 +47,5 @@ service apache2 restart
 # Node Client
 # apt-get update (Pastikan nameserver router sudah ada)
 # apt-get install lynx -y
-# lynx abimanyu f07.com (Run command no 11)
+# lynx abimanyu.f07.com (Run command no 11)
 # lynx abimanyu.f07.com/home (Run command no 12)
