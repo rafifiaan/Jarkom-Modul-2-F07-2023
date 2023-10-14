@@ -281,6 +281,7 @@ Dilakukan setup terlebih dahulu pada *Node* Yudhistira (DNS Master). Setelah itu
 
 ### Script Solution
 - Node Yudhistira
+
 ```sh
 echo 'zone "arjuna.f07.com" {
         type master;
@@ -305,11 +306,15 @@ www             IN      CNAME   arjuna.f07.com.
 
 service bind9 restart
 ```
+
 Setelah itu melakukan *setup* yaitu menghapus *namserver 192.168.122.1* atau *nameserver router* dan menambahkan *nameserver IP Node Yudhistira* dalam file **/etc/resolv.conf** pada *Node Client* (Nakula / Sadewa) seperti berikut :
+
 ```
 nameserver 10.55.1.4
 ```
-Dan setelah itu dapat dibuktikan dengan melakukan **Ping** dan **CNAME** pada domain yang telah dibuat 
+
+Dan setelah itu dapat dibuktikan dengan melakukan **Ping** dan `host` melalui **CNAME** pada domain yang telah dibuat 
+
 ```sh
 ping arjuna.f07.com -c 3
 ping www.arjuna.f07.com -c 3
@@ -333,10 +338,11 @@ Test Alias dari **www**
 ## Question 3 - *DNS*
 > Dengan cara yang sama seperti soal nomor 2, buatlah website utama dengan akses ke **abimanyu.yyy.com** dan alias **www.abimanyu.yyy.com**!
 
-Langkah-langkah implementasi yang dilakukan sama seperti *Question 2*, perbedaan nya hanya terletak pada nama *domain*
+Langkah-langkah implementasi yang dilakukan sama seperti *Question 2*, perbedaannya hanya terletak pada nama *domain*
 
 ### Script Solution
 - Node Yudhistira
+
 ```sh
 echo 'zone "abimanyu.f07.com" {
         type master;
@@ -360,7 +366,8 @@ www             IN      CNAME   abimanyu.f07.com.
 service bind9 restart
 ```
 
-Setelah itu, dikarenakan *nameserver* masih menggunakan *IP Node Yudhistira* maka langkah selanjutnya yaitu langsung dibuktikan dengan melakukan **Ping** dan **CNAME** pada domain
+Setelah itu, dikarenakan *nameserver* masih menggunakan *IP Node Yudhistira* maka langkah selanjutnya yaitu langsung dibuktikan dengan melakukan **Ping** dan `host` melalui **CNAME** pada domain
+
 ```sh
 ping abimanyu.f07.com -c 3
 ping www.abimanyu.f07.com -c 3
@@ -369,12 +376,15 @@ host -t CNAME www.abimanyu.f07.com
 
 ### Test Result
 Test tanpa **www**
+
 ![domAbimanyu](resources/doc-images/3-1.png)
 
 Test menggunakan **www**
+
 ![domWwwAbimanyu](resources/doc-images/3-2.png)
 
 Test Alias dari **www**
+
 ![cnameAbimanyu](resources/doc-images/3-3.png)
 
 
@@ -385,6 +395,7 @@ Dalam membuat *subdomain* pada domain *abimanyu.yyy.com*, perlu menambahkan bari
 
 ### Script Solution
 - Node Yudhistira
+
 ```sh
 echo "
 \$TTL    604800
@@ -403,14 +414,16 @@ parikesit       IN      A       10.55.3.3 ; IP Abimanyu
 
 service bind9 restart
 ```
+
 Setelah itu, langkah selanjutnya masih sama dengan *Question 2 / 3*, yaitu langsung dibuktikan melalui **Ping**
+
 ```sh
 ping parikesit.abimanyu.f07.com -c 3
 ```
 
 ### Test Result
-![parikesit](resources/doc-images/4.png)
 
+![parikesit](resources/doc-images/4.png)
 
 ## Question 5 - *DNS*
 > Buat juga reverse domain untuk domain utama. (Abimanyu saja yang direverse)!
@@ -418,15 +431,19 @@ ping parikesit.abimanyu.f07.com -c 3
 Sebelum melakukan reverse domain, langkah pertama adalah perlu untuk mengetahui IP dari *Node* Abimanyu. Karena IP Abimanyu adalah 10.55.3.3, maka kita perlu mengubahnya menjadi 3.3.55.10. 
 
 ### Script Solution
+
 Setelah mengetahui IP dari *Node* Abimanyu, kita perlu mengedit file **/etc/bind/named.conf.local** dengan menambahkan 3 byte awal dari IP *Node* Abimanyu seperti berikut
 - Node Yudhistira
+
 ```sh
 echo 'zone "3.55.10.in-addr.arpa" { 
         type master;
         file "/etc/bind/praktikum-jarkom/3.55.10.in-addr.arpa";
 };' > /etc/bind/named.conf.local
 ```
+
 Dan dilanjut dengan meng-copy file **db.local** ke-dalam folder **praktikum-jarkom** dan merubah namanya menjadi **/etc/bind/jarkom/3.55.10.in-addr.arpa**. Setlah itu mengeditnya menjadi seperti berikut 
+
 ```sh
 echo "
 \$TTL    604800
@@ -443,19 +460,24 @@ echo "
 
 service bind9 restart
 ```
+
 Untuk mengecek apakah konfigurasi sudah benar atau belum, lakukan perintah berikut 
+
 ```sh
 apt-get update
 apt-get install dnsutils
 ```
+
 Pastikan nameserver di **/etc/resolv.conf** pada *Node Yudhistira* telah dikembalikan sama dengan nameserver dari **Pandudewanata** 
 
 Setelah itu, testing dapat dilakukan sama seperti pada *Question 2 / 3 / 4* yaitu pada *Node Client* dengan memasukkan command berikut
+
 ```sh
 host -t PTR 10.55.3.3
 ```
 
 ### Test Result
+
 ![ptrIP](resources/doc-images/5.png)
 
 
@@ -467,6 +489,7 @@ Dalam membuat DNS Slave, kita memerlukan beberapa konfigurasi pada `DNS Master` 
 ### Script Solution
 Langkah awal adalah menambahkan *nofity, also-notify dan allow-transfer* agar memberikan izin kepada *IP* yang dituju
 - Node Yudhistira
+
 ```sh
 echo 'zone "arjuna.f07.com" {
         type master;
@@ -496,6 +519,7 @@ service bind9 stop // Stop untuk testing Slave
 - Node Werkudara (Slave)
 
 Membuat **type slave** pada zone dari *domain* dan mengubah *path file*
+
 ```sh
 echo 'zone "arjuna.f07.com" {
         type slave;
@@ -518,6 +542,7 @@ nameserver 10.55.1.5
 ```
 
 Jika sudah, testing dapat dilakukan dengan melakukan **Ping** pada domain yang telah dibuat seperti `Arjuna` dan `Abimanyu`
+
 ```sh
 ping arjuna.f07.com -c 3
 ping abimanyu.f07.com -c 3
@@ -549,6 +574,7 @@ Dalam membuat Delegasi subdomain, diperlukan beberapa configurasi pada `DNS Mast
 ### Script Solution
 Perlu menambahkan ``ns1     IN      A       10.55.1.5     ; IP Werkudara`` agar mendapatkan authoritative terhadap Werkudara. Kita juga perlu mengaktifkan ``allow-query { any; };`` pada `DNS Master`. Dan juga perlu untuk mengedit **/etc/bind/named.conf.local** 
 - Node Yudhistira
+
 ```sh
 echo '
 $TTL    604800
@@ -594,6 +620,7 @@ service bind9 restart
 - Node Werkudara
 
 Dan juga perlu setup juga pada *Node Werkudara* untuk mengarahkan `zone` ke `DNS Master` agar authoritative tadi dapat jalan. Kita juga perlu mengaktifkan ``allow-query { any; };`` pada `DNS Slave`
+
 ```sh
 echo '
 options {
@@ -630,7 +657,8 @@ www             IN      CNAME   baratayuda.abimanyu.f07.com.
 service bind9 restart
 ```
 
-Setelah semua berhasil di-setup, untuk melakukan testing cukup melakukan **Ping** pada `baratayuda.abimanyu.f07.com` atau `www.baratayuda.abimanyu.f07.com` dan juga Alias dapat dilihat dengan menjalankan **CNAME**
+Setelah semua berhasil di-setup, untuk melakukan testing cukup melakukan **Ping** pada `baratayuda.abimanyu.f07.com` atau `www.baratayuda.abimanyu.f07.com` dan juga Alias dapat dilihat dengan menjalankan `host` melalui **CNAME**
+
 ```sh
 ping baratayuda.abimanyu.f07.com -c 3
 ping www.baratayuda.abimanyu.f07.com -c 3
@@ -639,12 +667,15 @@ host -t CNAME www.baratayuda.abimanyu.f07.com
 
 ### Test Result
 Test tanpa **www**
+
 ![baratayuda](resources/doc-images/7-1.png)
 
 Test menggunakan **www**
+
 ![baratayudaWWW](resources/doc-images/7-2.png)
 
 Test Alias dari **www**
+
 ![cnameBarata](resources/doc-images/7-3.png)
 
 
@@ -1402,7 +1433,7 @@ service apache2 restart
 ```
 
 ### Test Result
-Untuk pengujian, dapat kembali mengakses `lynx rjp.baratayuda.abimanyu.a09.com:14000` atau `lynx rjp.baratayuda.abimanyu.a09.com:14400` pada node client Nakula
+Untuk pengujian, dapat kembali mengakses `lynx rjp.baratayuda.abimanyu.f07.com:14000` atau `lynx rjp.baratayuda.abimanyu.f07.com:14400` pada node client Nakula
 
 ![17 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/67cce9e0-65f9-4b84-8fcd-b532944faa85)
 
