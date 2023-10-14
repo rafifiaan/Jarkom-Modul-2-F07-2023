@@ -1,4 +1,4 @@
-# Laporan Resmi Praktikum Jarkom Modul 2 2023
+# Laporan Resmi Praktikum Jaringan Komputer Modul 2 2023
 
 Repository in ***Bahasa***
 
@@ -12,13 +12,13 @@ Kelompok F07 -
 Jaringan Komputer (F) </br>
 *Insitut Teknologi Sepuluh Nopember*
 
-**Author's :**
+**Authors :**
 | Name                              | Student ID |
 | ----------------------------------|------------|
 | Arfi Raushani Fikra               | 5025211084 |
 | Rafi Aliefian Putra Ramadhani     | 5025211234 |
 
-## List of Content's
+## List of Contents
 - [Preparation](#preparation)
   - [Topology](#topology)
   - [Node Config](#node-config)
@@ -86,12 +86,12 @@ Jaringan Komputer (F) </br>
 
 # Preparation
 > Must be known before starting configuration
-## Topology
+## Network Topology
 > *Using Topology number 6*
 
 ![imgTopology](resources/doc-images/topology.png)
 
-## Node Config
+## Node Configuration
 - **Router** 
   - Pandudewanata
   ```
@@ -191,17 +191,22 @@ Jaringan Komputer (F) </br>
 
 ## Install & Setup
 - **Router (Pandudewanata)**
+
 ```sh
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.55.0.0/16
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ```
+
 - **DNS Master & Slave (Yudhistira & Werkudara)**
+
 ```sh
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 apt-get update
 apt-get install bind9 -y      
 ```
+
 - **Client (Nakula & Sadewa)**
+
 ```sh
 echo '
 nameserver 10.55.1.4 # IP Yudhistira
@@ -212,11 +217,15 @@ apt-get update
 apt-get install dnsutils -y
 apt-get install lynx -y
 ```
+
 - **Web Server Nginx**
- ```sh
+
+```sh
 apt install nginx php php-fpm -y
 ```
+
 - **Web Server Apache2**
+
 ```sh
 apt-get update
 apt-get install dnsutils -y
@@ -232,7 +241,9 @@ apt-get install php -y
 echo -e "\n\nPHP Version:"
 php -v
 ```
+
 - **Zip Download & Unzip Web Server Resources**
+
 ```sh
 wget -O '/var/www/abimanyu.f07.com' 'https://drive.usercontent.google.com/download?id=1a4V23hwK9S7hQEDEcv9FL14UkkrHc-Zc'
 unzip -o /var/www/abimanyu.f07.com -d /var/www/
@@ -258,7 +269,7 @@ rm -rf /var/www/rjp.baratayuda.abimanyu.yyy.com
 ## Question 1 - *DNS*
 > Yudhistira akan digunakan sebagai DNS Master, Werkudara sebagai DNS Slave, Arjuna merupakan Load Balancer yang terdiri dari beberapa Web Server yaitu Prabakusuma, Abimanyu, dan Wisanggeni. Buatlah topologi nya!
 
-Setelah membuat Topologi *Node* dan konfigurasi Node, langkah selanjutnya yaitu melakukan setup pada *Node router* (Pandudewanata) dan juga pada *Node client* (Nakula & Sadewa).
+Setelah membuat Topologi *Node* dan konfigurasi *Node* dengan menggunakan GNS3, langkah selanjutnya yaitu melakukan setup pada *Node router* (Pandudewanata) dan juga pada *Node client* (Nakula & Sadewa).
 
 ### Script Solution
 > Testing Node
