@@ -1256,12 +1256,42 @@ Laman **403 Forbidden** setelah *alert*
 
 ## Question 16 - *Web Server*
 > Buatlah suatu konfigurasi virtual host agar file asset **www.parikesit.abimanyu.yyy.com/public/js** menjadi **www.parikesit.abimanyu.yyy.com/js** 
-
-
+Agar **www.parikesit.abimanyu.f07.com/public/js** dapat diakses hanya dengan masuk ke **www.parikesit.abimanyu.f07.com/js**, kita dapat menambahkan `Alias` ke dalam file `parikesit.abimanyu.f07.com.conf`
 ### Script Solution
+Pada file `parikesit.abimanyu.f07.com.conf` tambahkan baris `Alias "/js" "/var/www/parikesit.abimanyu.f07/public/js"` seperti ini
+```sh
+echo -e '<VirtualHost *:80>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/parikesit.abimanyu.f07
+  ServerName parikesit.abimanyu.f07.com
+  ServerAlias www.parikesit.abimanyu.f07.com
 
+  <Directory /var/www/parikesit.abimanyu.f07/public>
+          Options +Indexes
+  </Directory>
+
+  <Directory /var/www/parikesit.abimanyu.f07/secret>
+          Options -Indexes
+  </Directory>
+
+  Alias "/public" "/var/www/parikesit.abimanyu.f07/public"
+  Alias "/secret" "/var/www/parikesit.abimanyu.f07/secret"
+  Alias "/js" "/var/www/parikesit.abimanyu.f07/public/js"
+
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
+```
+Setelah itu lakukan perintah `service apache2 restart`
 ### Test Result
+Ketika dilakukan pengujian pada client node Nakula,
+![16 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/e95ab474-6577-4bb6-a3c6-0b78b053434f)
 
+Diperoleh hasil yang sama ketika mengakses `www.parikesit.abimanyu.f07.com/public/js`, yaitu sebagai berikut
+![16a testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/16ca2d14-ac3f-4140-b59e-ffd76929a3b2)
 
 ## Question 17 - *Web Server*
 > Agar aman, buatlah konfigurasi agar **www.rjp.baratayuda.abimanyu.yyy.com** hanya dapat diakses melalui port 14000 dan 14400.
