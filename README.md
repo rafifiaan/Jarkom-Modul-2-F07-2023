@@ -917,9 +917,90 @@ Hasil menampilkan Wisanggeni
 ## Question 10 - *Web Server*
 > Kemudian gunakan algoritma **Round Robin** untuk Load Balancer pada **Arjuna**. Gunakan server_name pada soal nomor 1. Untuk melakukan pengecekan akses alamat web tersebut kemudian pastikan worker yang digunakan untuk menangani permintaan akan berganti ganti secara acak. Untuk webserver di masing-masing worker wajib berjalan di port 8001-8003. Contoh **Prabakusuma:8001**, **Abimanyu:8002**, **Wisanggeni:8003** 
 
+Setelah sebelumnya berhasil melakukan deployment pada setiap worker, untuk menerapkan **Round Robin** dan setiap worker ditentukan port-nya. Kita hanya perlu mengubah beberapa konfigurasi pada load balancer Arjuna, dan ketiga workernya.
 ### Script Solution
+Untuk load balancer Arjuna, dapat mengubah konfigurasinya menjadi seperti berikut ini. Disini ditambahkan `:800N` pada setiap baris server worker-nya, dengan N merupakan angka 1 hingga 3 untuk membedakan port pada setiap workernya.
+```sh
+echo '
+ upstream myweb  {
+ 	server 10.55.3.2:8001; #IP Prabakusuma
+ 	server 10.55.3.3:8002; #IP Abimanyu
+ 	server 10.55.3.4:8003; #IP Wisanggeni
+ }
 
+ server {
+ 	listen 80;
+ 	server_name arjuna.f07.com;
+
+ 	location / {
+ 	proxy_pass http://myweb;
+ 	}
+ }
+' > /etc/nginx/sites-available/lb-arjuna.f07
+ln -s /etc/nginx/sites-available/lb-arjuna.f07 /etc/nginx/sites-enabled
+service nginx restart
+```
+
+Adapun untuk worker-nya, terdapat tambahan keterangan terkait port yang digunakan. Pada konfigurasi ini, dapat dilihat pada baris `listen 800N`, dimana N merupakan angka menyesuaikan dengan masing-masing port worker. Disini juga ditambahkan satu perintah `echo` (echo yang ketiga) yang menampilkan pesan tambahan terkait port yang digunakan oleh setiap worker.
+```sh
+echo '
+ <?php
+  echo "Halo, Kamu berada di Prabakusuma";
+ ?>
+' > /var/www/praktikum-jarkom/index.php
+
+echo '
+server {
+
+ 	listen 8001;
+
+ 	root /var/www/praktikum-jarkom;
+
+ 	index index.php index.html index.htm;
+ 	server_name _;
+
+ 	location / {
+ 			try_files $uri $uri/ /index.php?$query_string;
+ 	}
+
+ 	# pass PHP scripts to FastCGI server
+ 	location ~ \.php$ {
+ 	include snippets/fastcgi-php.conf;
+ 	fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+ 	}
+
+location ~ /\.ht {
+ 			deny all;
+ 	}
+
+ 	error_log /var/log/nginx/arjuna.f07_error.log;
+ 	access_log /var/log/nginx/arjuna.f07_access.log;
+ }
+' > /etc/nginx/sites-available/arjuna.f07
+
+nginx_port=$(awk '/listen/ {print $2}' /etc/nginx/sites-available/arjuna.f07)
+echo "
+ <?php
+  echo ',tepatnya di port : $nginx_port'
+ ?>
+" >> /var/www/praktikum-jarkom/index.php
+
+service php7.0-fpm start
+rm /etc/nginx/sites-enabled/default
+service nginx restart
+```
 ### Test Result
+Lakukan pengujian pada node client seperti Nakula. Tuliskan perintah berikut
+![9 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/81ce7cfb-262d-402a-b765-8c49f8e6b3ef)
+
+Hasil menampilkan Prabakusuma
+![10a testpra](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/4891f93e-f475-4aef-ab70-d1739397a578)
+
+Hasil menampilkan Abimanyu
+![10b testabi](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/6321a60a-dabc-4bff-ab71-14a87de0a982)
+
+Hasil menampilkan Wisanggeni
+![10c testwis](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/faf59cb5-74c8-410c-856a-f95ee681928a)
 
 
 ## Question 11 - *Web Server*
