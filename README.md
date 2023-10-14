@@ -522,15 +522,19 @@ ping abimanyu.f07.com -c 3
 
 ### Test Result
 Start bind9 **Werkudara**
+
 ![strWerku](resources/doc-images/6-1.png)
 
 Stop bind9 **Yudhistira**
+
 ![stpYudhi](resources/doc-images/6-2.png)
 
 Test domain **Arjuna**
+
 ![slaveArjuna](resources/doc-images/6-3.png)
 
 Test domain **Abimanyu**
+
 ![slaveAbimanyu](resources/doc-images/6-4.png)
 
 
@@ -1289,9 +1293,11 @@ echo -e '<VirtualHost *:80>
 Setelah itu lakukan perintah `service apache2 restart`
 ### Test Result
 Ketika dilakukan pengujian pada client node Nakula,
+
 ![16 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/e95ab474-6577-4bb6-a3c6-0b78b053434f)
 
 Diperoleh hasil yang sama ketika mengakses `www.parikesit.abimanyu.f07.com/public/js`, yaitu sebagai berikut
+
 ![16a testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/16ca2d14-ac3f-4140-b59e-ffd76929a3b2)
 
 ## Question 17 - *Web Server*
