@@ -945,14 +945,14 @@ Adapun untuk worker-nya, terdapat tambahan keterangan terkait port yang digunaka
 ```sh
 echo '
  <?php
-  echo "Halo, Kamu berada di Prabakusuma";
+  echo "Halo, Kamu berada di [Nama Worker]";
  ?>
 ' > /var/www/praktikum-jarkom/index.php
 
 echo '
 server {
 
- 	listen 8001;
+ 	listen 800N;
 
  	root /var/www/praktikum-jarkom;
 
