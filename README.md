@@ -899,6 +899,19 @@ rm /etc/nginx/sites-enabled/default
 service nginx restart
 ```
 ### Test Result
+Lakukan pengujian pada node client seperti Nakula. Tuliskan perintah berikut
+![9 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/81ce7cfb-262d-402a-b765-8c49f8e6b3ef)
+
+Maka akan diperoleh hasil sebagai berikut. Hasil ini dapat berubah-ubah jika perintah pengujian di atas dijalankan kembali
+
+Hasil menampilkan Prabakusuma
+![9a testpra](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/5aa958d4-9668-4076-8b52-4a62c2bf8f7b)
+
+Hasil menampilkan Abimanyu
+![9b testabi](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/636e51ff-274a-404b-91dc-4af362aa73a3)
+
+Hasil menampilkan Wisanggeni
+![9c testwis](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/944690fc-f96a-499d-b6bd-81c6c177270b)
 
 
 ## Question 10 - *Web Server*
