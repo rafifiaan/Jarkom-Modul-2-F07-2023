@@ -87,7 +87,7 @@ Jaringan Komputer (F) </br>
 # Preparation
 > Must be known before starting configuration
 ## Topology
-> *Using Topology number 7*
+> *Using Topology number 6*
 
 ![imgTopology](resources/doc-images/topology.png)
 
