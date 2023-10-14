@@ -1365,10 +1365,58 @@ Adapun untuk pengujian akses dengan port yang salah, diperoleh hasil sebagai ber
 ## Question 18 - *Web Server*
 > Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy
 
+Untuk autentikasi username dan password, kita dapat menambahkan pengaturan seperti `AuthType`, `AuthName`, `AuthUserFile`, dan `Require valid-user` pada pengaturan `<Directory /x> ... </Directory>` di dalam file `/etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf`.
 ### Script Solution
+Untuk konfigurasinya adalah sebagai berikut
+```sh
+echo -e '<VirtualHost *:14000 *:14400>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/rjp.baratayuda.abimanyu.f07
+  ServerName rjp.baratayuda.abimanyu.f07.com
+  ServerAlias www.rjp.baratayuda.abimanyu.f07.com
+
+  <Directory /var/www/rjp.baratayuda.abimanyu.f07>
+          AuthType Basic
+          AuthName "Restricted Content"
+          AuthUserFile /etc/apache2/.htsecure
+          Require valid-user
+  </Directory>
+
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf
+```
+
+Setelah itu, dapat menjalankan perintah berikut
+```sh
+htpasswd -c -b /etc/apache2/.htsecure Wayang baratayudaf07
+```
+
+dimana `-c` berarti `created`, `-b` berarti fungsi `bcrypt` untuk mengubah password menjadi sebuah hash. Lalu `Wayang` sebagai username dan `baratayudaf07` sebagai password. Setelah itu lakukan aktivasi dan restart apache2 server.
+```sh
+a2ensite rjp.baratayuda.abimanyu.f07.com.conf
+service apache2 restart
+```
 
 ### Test Result
+Untuk pengujian, dapat kembali mengakses `lynx rjp.baratayuda.abimanyu.a09.com:14000` atau `lynx rjp.baratayuda.abimanyu.a09.com:14400` pada node client Nakula
 
+![17 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/67cce9e0-65f9-4b84-8fcd-b532944faa85)
+
+setelah itu akan muncul pesan peringatan, yang dilanjutkan dengan tampilan untuk mengisikan username dan password autentikasi
+
+![18a testwarning](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/0caf20db-ea4d-4734-951a-10c90ac477bd)
+
+![18b  testuser](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/250adc0f-a3ec-456b-b02c-b1bf96d67b8f)
+
+![18c testpass](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/26433408-9987-4f6a-9842-f6d4007479b3)
+
+Setelah mengisikan username `Wayang` dan password `baratayudaf07`, diperoleh hasil sebagai berikut
+
+![18d testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/82d8bfd8-93b6-45f2-b891-5f063e79e956)
 
 ## Question 19 - *Web Server*
 > Buatlah agar setiap kali mengakses IP dari Abimanyu akan secara otomatis dialihkan ke **www.abimanyu.yyy.com** (alias)
