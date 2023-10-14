@@ -1281,6 +1281,7 @@ Laman **secret** setelah *alert*
 
 Dalam membuat page *error html*, didapatkan dari file *resources* yang telah diberikan, untuk detailnya ada pada folder **parikesit.abimanyu.f07.com/public/error/.** Disana terdapat 2 file yaitu **403.html** dan **404.html**.</br>
 Untuk menyelesaikan-nya juga menggunakan **ErrorDocument** yang berfungsi melakukan *redirect* terhadap file yang diinginkan ketika mendapatkan masalah ketika mengakses *domain* yang telah ada sebelumnya. Sehingga penerapan konfigurasinya dengan menambahkan berikut 
+
 ```
 ErrorDocument 404 /error/404.html
 ErrorDocument 403 /error/403.html
@@ -1288,6 +1289,7 @@ ErrorDocument 403 /error/403.html
 
 ### Script Solution
 - Node Abimanyu
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1317,6 +1319,7 @@ service apache2 restart
 ```
 
 Setelah itu, untuk membuktikan **custom error** cukup dengan menjalankan command berikut pada *Node Client*
+
 ```sh
 lynx parikesit.abimanyu.f07.com/testerror
 lynx parikesit.abimanyu.f07.com/secret
@@ -1324,15 +1327,19 @@ lynx parikesit.abimanyu.f07.com/secret
 
 ### Test Result
 Test pada laman **404 Error**
+
 ![error1](resources/doc-images/15-1.png)
 
 Laman **404 Error** setelah *alert*
+
 ![nextError](resources/doc-images/15-2.png)
 
 Test pada laman **403 Forbidden**
+
 ![forbidden1](resources/doc-images/15-3.png)
 
 Laman **403 Forbidden** setelah *alert*
+
 ![nextSecret](resources/doc-images/15-4.png)
 
 
@@ -1340,8 +1347,10 @@ Laman **403 Forbidden** setelah *alert*
 > Buatlah suatu konfigurasi virtual host agar file asset **www.parikesit.abimanyu.yyy.com/public/js** menjadi **www.parikesit.abimanyu.yyy.com/js** 
 
 Agar **www.parikesit.abimanyu.f07.com/public/js** dapat diakses hanya dengan masuk ke **www.parikesit.abimanyu.f07.com/js**, kita dapat menambahkan `Alias` ke dalam file `parikesit.abimanyu.f07.com.conf`
+
 ### Script Solution
 Pada file `parikesit.abimanyu.f07.com.conf` tambahkan baris `Alias "/js" "/var/www/parikesit.abimanyu.f07/public/js"` seperti ini
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1369,6 +1378,7 @@ echo -e '<VirtualHost *:80>
 </VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
 ```
 Setelah itu lakukan perintah `service apache2 restart`
+
 ### Test Result
 Ketika dilakukan pengujian pada client node Nakula,
 
@@ -1382,8 +1392,10 @@ Diperoleh hasil yang sama ketika mengakses `www.parikesit.abimanyu.f07.com/publi
 > Agar aman, buatlah konfigurasi agar **www.rjp.baratayuda.abimanyu.yyy.com** hanya dapat diakses melalui port 14000 dan 14400.
 
 Untuk mengizinkan akses hanya pada port 14000 dan 14400, kita dapat mengatur port pada virtual host dan konfigurasi *Listening port* pada file `ports.conf`
+
 ### Script Solution
 Setelah melakukan pengaturan awal (seperti download dari drive), kita dapat memberi keterangan `<VirtualHost *:14000 *:14400>` pada virtual host dengan membuat konfigurasi pada file `/etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf` sebagai berikut
+
 ```sh
 echo -e '<VirtualHost *:14000 *:14400>
   ServerAdmin webmaster@localhost
@@ -1398,7 +1410,9 @@ echo -e '<VirtualHost *:14000 *:14400>
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>' > /etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf
 ```
+
 Setelah itu, kita perlu menambah `Listening Port` pada file `/etc/apache2/ports.conf`. Berikut konfigurasinya
+
 ```sh
 echo -e '# If you just change the port or add more ports here, you will likely also
 # have to change the VirtualHost statement in
@@ -1420,10 +1434,12 @@ Listen 14400
 ```
 
 Setelah itu, kita perlu melakukan aktivasi dan restart server Apache2
+
 ```sh
 a2ensite rjp.baratayuda.abimanyu.f07.com.conf
 service apache2 restart
 ```
+
 ### Test Result
 Untuk pengujian dengan mengakses port 14000 atau 14400, diperoleh hasil sebagai berikut
 
@@ -1441,8 +1457,10 @@ Adapun untuk pengujian akses dengan port yang salah, diperoleh hasil sebagai ber
 > Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy
 
 Untuk autentikasi username dan password, kita dapat menambahkan pengaturan seperti `AuthType`, `AuthName`, `AuthUserFile`, dan `Require valid-user` pada pengaturan `<Directory /x> ... </Directory>` di dalam file `/etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf`.
+
 ### Script Solution
 Untuk konfigurasinya adalah sebagai berikut
+
 ```sh
 echo -e '<VirtualHost *:14000 *:14400>
   ServerAdmin webmaster@localhost
@@ -1466,11 +1484,13 @@ echo -e '<VirtualHost *:14000 *:14400>
 ```
 
 Setelah itu, dapat menjalankan perintah berikut
+
 ```sh
 htpasswd -c -b /etc/apache2/.htsecure Wayang baratayudaf07
 ```
 
 dimana `-c` berarti `created`, `-b` berarti fungsi `bcrypt` untuk mengubah password menjadi sebuah hash. Lalu `Wayang` sebagai username dan `baratayudaf07` sebagai password. Setelah itu lakukan aktivasi dan restart apache2 server.
+
 ```sh
 a2ensite rjp.baratayuda.abimanyu.f07.com.conf
 service apache2 restart
@@ -1499,6 +1519,7 @@ Setelah mengisikan username `Wayang` dan password `baratayudaf07`, diperoleh has
 Untuk mengakses **www.abimanyu.f07.com** dengan melalui IP Abimanyu, diperlukan sebuah `Redirect` ke **www.abimanyu.f07.com**. Kita dapat memasukkan konfigurasi ini ke dalam `000-default.conf` yang merupakan pengaturan *default* dari service Apache
 ### Script Solution
 Berikut konfigurasinya
+
 ```sh
 echo -e '<VirtualHost *:80>
     ServerAdmin webmaster@abimanyu.f07.com
@@ -1517,8 +1538,9 @@ service apache2 restart
 # Test
 # lynx 10.55.3.3
 ```
+
 ### Test Result
-Kita dapat menjalankan pengujian sebagai berikut pada node client Nakula
+Kita dapat menjalankan pengujian sebagai berikut pada node client Nakula dengan menggunakan `lynx` ditujukan pada IP Abimanyu yaitu `10.55.3.3`
 
 ![19 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/6c4a3f46-6ca1-4dfc-b3d0-045b96cd3e86)
 
@@ -1531,21 +1553,27 @@ Diperoleh hasil sebagai berikut
 > Karena website **www.parikesit.abimanyu.yyy.com** semakin banyak pengunjung dan banyak gambar gambar random, maka ubahlah request gambar yang memiliki substring “abimanyu” akan diarahkan menuju abimanyu.png.
 
 Untuk menjawab soal ini, kita perlu mengatur pemetaan URL dengan bantuan `a2enmod rewrite`. 
+
 ### Script Solution
 Berikut konfigurasinya
 
 Pertama, kita perlu menjalankan perintah
+
 ```sh
 a2enmod rewrite
 ```
 
 Setelah itu, kita menjalankan pengaturan untuk ketentuan `Rewrite`-nya.
+
 ```sh
 echo 'RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))
 RewriteCond %{REQUEST_URI} !/public/images/abimanyu.png
 RewriteRule abimanyu http://parikesit.abimanyu.f07.com/public/images/abimanyu.png$1 [L,R=301]' > /var/www/parikesit.abimanyu.f07/.htaccess
 ```
+
+Berikut keterangan terkait konfigurasi kode di atas
+
 `RewriteEngine On`: Ini mengaktifkan mod_rewrite untuk server web. Tanpa baris ini, aturan pemetaan ulang URL tidak akan diterapkan.
 
 `RewriteCond %{REQUEST_URI} ^/public/images/(.*)(abimanyu)(.*\.(png|jpg))`: Ini adalah kondisi pertama yang memeriksa apakah URL memenuhi pola tertentu. Kondisi ini memeriksa apakah URL dimulai dengan /public/images/ diikuti oleh teks apa pun, kemudian abimanyu, kemudian teks lagi, dan diakhiri dengan .png atau .jpg.
@@ -1555,6 +1583,7 @@ RewriteRule abimanyu http://parikesit.abimanyu.f07.com/public/images/abimanyu.pn
 `RewriteRule abimanyu http://parikesit.abimanyu.f07.com/public/images/abimanyu.png$1 [L,R=301]`: Aturan pemetaan ulang ini digunakan ketika kedua kondisi di atas terpenuhi. Aturan ini akan mengarahkan URL yang memenuhi pola tersebut ke **http://parikesit.abimanyu.f07.com/public/images/abimanyu.png**, menambahkan apapun yang cocok dengan (.*) pada URL target.
 
 Setelah itu terdapat konfigurasi *virtual host* sebagai berikut
+
 ```sh
 echo -e '<VirtualHost *:80>
   ServerAdmin webmaster@localhost
@@ -1587,14 +1616,16 @@ echo -e '<VirtualHost *:80>
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>' > /etc/apache2/sites-available/parikesit.abimanyu.f07.com.conf
 ```
+
 Terakhir, jalankan perintah berikut
+
 ```sh
 a2enmod rewrite
 service apache2 restart
 ```
 
 ### Test Result
-Untuk pengujian dapat dilakukan sebagai berikut
+Untuk pengujian dapat dilakukan sebagai berikut, dimana kita mencoba menjalankan perintah `lynx` yang diikuti `parikesit.abimanyu.f07.com/public/images/` lalu disertai nama file. Nama file disini dapat berupa gambar, dll. Konfigurasi `Rewrite` akan melakukan penyaringan seperti ketentuan kondisi di atas.
 
 ![20 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/53244f71-deed-4bf7-a99c-9d6f6634dda4)
 
