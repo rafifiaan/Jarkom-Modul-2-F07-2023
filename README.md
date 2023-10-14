@@ -1295,11 +1295,59 @@ Diperoleh hasil yang sama ketika mengakses `www.parikesit.abimanyu.f07.com/publi
 
 ## Question 17 - *Web Server*
 > Agar aman, buatlah konfigurasi agar **www.rjp.baratayuda.abimanyu.yyy.com** hanya dapat diakses melalui port 14000 dan 14400.
-
+Untuk mengizinkan akses hanya pada port 14000 dan 14400, kita dapat mengatur port pada virtual host dan konfigurasi *Listening port* pada file `ports.conf`
 ### Script Solution
+Setelah melakukan pengaturan awal (seperti download dari drive), kita dapat memberi keterangan `<VirtualHost *:14000 *:14400>` pada virtual host dengan membuat konfigurasi pada file `/etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf` sebagai berikut
+```sh
+echo -e '<VirtualHost *:14000 *:14400>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/rjp.baratayuda.abimanyu.f07
+  ServerName rjp.baratayuda.abimanyu.f07.com
+  ServerAlias www.rjp.baratayuda.abimanyu.f07.com
 
+  ErrorDocument 404 /error/404.html
+  ErrorDocument 403 /error/403.html
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/rjp.baratayuda.abimanyu.f07.com.conf
+```
+Setelah itu, kita perlu menambah `Listening Port` pada file `/etc/apache2/ports.conf`. Berikut konfigurasinya
+```sh
+echo -e '# If you just change the port or add more ports here, you will likely also
+# have to change the VirtualHost statement in
+# /etc/apache2/sites-enabled/000-default.conf
+
+Listen 80
+Listen 14000
+Listen 14400
+
+<IfModule ssl_module>
+        Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+        Listen 443
+</IfModule>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet' > /etc/apache2/ports.conf
+```
+
+Setelah itu, kita perlu melakukan aktivasi dan restart server Apache2
+```sh
+a2ensite rjp.baratayuda.abimanyu.f07.com.conf
+service apache2 restart
+```
 ### Test Result
+Untuk pengujian dengan mengakses port 14000 atau 14400, diperoleh hasil sebagai berikut
+![17 test](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/67cce9e0-65f9-4b84-8fcd-b532944faa85)
 
+![17a testresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/c066cebe-d90a-4738-b69e-3e0f696846e8)
+
+Adapun untuk pengujian akses dengan port yang salah, diperoleh hasil sebagai berikut
+![17b testnotvalid](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/8569a852-f288-41cb-9615-4c7f21e39b22)
+
+![17c testnotvalidresult](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/e257116c-9a66-41e4-beb0-2c7e115e4936)
 
 ## Question 18 - *Web Server*
 > Untuk mengaksesnya buatlah autentikasi username berupa “Wayang” dan password “baratayudayyy” dengan yyy merupakan kode kelompok. Letakkan DocumentRoot pada /var/www/rjp.baratayuda.abimanyu.yyy
