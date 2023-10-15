@@ -18,7 +18,7 @@ Jaringan Komputer (F) </br>
 | Arfi Raushani Fikra               | 5025211084 |
 | Rafi Aliefian Putra Ramadhani     | 5025211234 |
 
-## List of Contents
+# List of Contents
 - [Preparation](#preparation)
   - [Topology](#topology)
   - [Node Config](#node-config)
@@ -83,6 +83,7 @@ Jaringan Komputer (F) </br>
 - [Question 20 - *Web Server*](#question-20---web-server)
   - [Script Solution](#script-solution-19)
   - [Test Result](#test-result-19)
+- [Obstacle](#)
 
 # Preparation
 > Must be known before starting configuration
@@ -1648,3 +1649,7 @@ Jika dilakukan percobaan dengan tidak sesuai ketentuan, misalnya pada percobaan 
 
 ![20b testresultnotvalid](https://github.com/rafifiaan/Jarkom-Modul-2-F07-2023/assets/108170236/cb7f5bce-0b5f-4959-a416-4423036d7342)
 
+
+# Obstacle
+- Sempat stuck pada Soal 9, namun masih tetap solved.
+- Sempat chaos waktu menjalankan script yang menjadi 1 script saja, tapi hamdalah bisa teratasi dengan mengubah cara script :D
