@@ -83,7 +83,7 @@ Jaringan Komputer (F) </br>
 - [Question 20 - *Web Server*](#question-20---web-server)
   - [Script Solution](#script-solution-19)
   - [Test Result](#test-result-19)
-- [Obstacle](#)
+- [Obstacle](#obstacle)
 
 # Preparation
 > Must be known before starting configuration
@@ -1653,3 +1653,5 @@ Jika dilakukan percobaan dengan tidak sesuai ketentuan, misalnya pada percobaan 
 # Obstacle
 - Sempat stuck pada Soal 9, namun masih tetap solved.
 - Sempat chaos waktu menjalankan script yang menjadi 1 script saja, tapi hamdalah bisa teratasi dengan mengubah cara script :D
+
+### *Thank you modul 2!*
